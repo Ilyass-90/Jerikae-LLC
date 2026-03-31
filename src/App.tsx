@@ -5,7 +5,15 @@
 
 import React, { useState, useEffect } from 'react';
 import { 
-  BarChart3, 
+  Routes, 
+  Route, 
+  Link, 
+  useNavigate, 
+  useLocation, 
+  useParams,
+  Navigate
+} from 'react-router-dom';
+import { 
   ChevronRight, 
   Globe, 
   Mail, 
@@ -28,6 +36,7 @@ import {
   Calendar,
   User,
   Tag,
+  BarChart3,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import CountUp from 'react-countup';
@@ -40,32 +49,6 @@ import { Page, BlogPost } from './types';
 import { blogPosts } from './data/blogPosts';
 
 // --- Components ---
-
-const TopBar = () => (
-  <motion.div 
-    initial={{ opacity: 0, y: -20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.6 }}
-    className="bg-brand-navy text-white/70 py-2 px-6 text-xs hidden md:block border-b border-white/10"
-  >
-    <div className="max-w-7xl mx-auto flex justify-between items-center font-bold uppercase tracking-widest">
-      <div className="flex gap-8">
-        <div className="flex items-center gap-2 group cursor-pointer hover:text-brand-gold transition-colors">
-          <Phone size={12} className="text-brand-gold" />
-          <span>307-317-8513</span>
-        </div>
-        <div className="flex items-center gap-2 group cursor-pointer hover:text-brand-gold transition-colors min-w-0">
-          <Mail size={12} className="text-brand-gold shrink-0" />
-          <span className="break-all">jerikaellc@gmail.com</span>
-        </div>
-      </div>
-      <div className="flex items-center gap-2 group cursor-pointer hover:text-brand-gold transition-colors min-w-0">
-        <MapPin size={12} className="text-brand-gold shrink-0" />
-        <span className="truncate">2106 House Ave Suite 288, Cheyenne, WY</span>
-      </div>
-    </div>
-  </motion.div>
-);
 
 const Logo = ({ className = "", variant = "transparent" }: { className?: string, variant?: "light" | "dark" | "transparent" }) => {
   const logos = {
@@ -138,8 +121,10 @@ const StatItem = ({ label, value, icon, index }: { label: string, value: string,
 
 // --- Pages ---
 
-const HomePage = ({ setPage }: { setPage: (p: Page) => void }) => (
-  <div className="space-y-0 pb-0">
+const HomePage = () => {
+  const navigate = useNavigate();
+  return (
+    <div className="space-y-0 pb-0">
     {/* Hero Section */}
     <section className="relative min-h-[70vh] lg:min-h-[60vh] flex items-center overflow-hidden">
       <motion.div 
@@ -175,12 +160,12 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void }) => (
               U.S.-based sourcing powered by exclusive supplier networks for serious Amazon sellers looking to dominate the marketplace.
             </p>
             <div className="flex flex-wrap gap-6">
-              <button onClick={() => setPage('contact')} className="btn-accent group px-10 cursor-pointer">
+              <Link to="/contact" className="btn-accent group px-10 cursor-pointer">
                 Book a Call <ArrowRight size={18} className="ml-2 transition-transform group-hover:translate-x-1" />
-              </button>
-              <button onClick={() => setPage('services')} className="btn-secondary !border-white/30 !text-white hover:!bg-white hover:!text-brand-navy px-10 cursor-pointer">
+              </Link>
+              <Link to="/services" className="btn-secondary !border-white/30 !text-white hover:!bg-white hover:!text-brand-navy px-10 cursor-pointer">
                 Explore Services
-              </button>
+              </Link>
             </div>
           </motion.div>
 
@@ -333,14 +318,17 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void }) => (
               subtitle="From online arbitrage to wholesale supplier negotiations, we provide the data and the connections you need to maintain a competitive edge on Amazon."
             />
           </div>
-          <motion.button 
+          <motion.div 
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => setPage('services')} 
-            className="btn-primary mb-16"
           >
-            View All Services
-          </motion.button>
+            <Link 
+              to="/services" 
+              className="btn-primary mb-16 inline-block"
+            >
+              View All Services
+            </Link>
+          </motion.div>
         </div>
         
         <div className="grid md:grid-cols-3 gap-10">
@@ -374,9 +362,9 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void }) => (
                 </div>
                 <h3 className="text-2xl font-black text-brand-navy mb-4 uppercase tracking-widest break-words">{service.title}</h3>
                 <p className="text-brand-gray leading-relaxed mb-10 flex-grow text-lg">{service.desc}</p>
-                <button onClick={() => setPage('services')} className="text-brand-gold font-black uppercase tracking-[0.2em] text-[10px] flex items-center gap-3 hover:gap-5 transition-all">
+                <Link to="/services" className="text-brand-gold font-black uppercase tracking-[0.2em] text-[10px] flex items-center gap-3 hover:gap-5 transition-all">
                   Learn More <ArrowRight size={14} />
-                </button>
+                </Link>
               </Card>
             </motion.div>
           ))}
@@ -493,12 +481,13 @@ const HomePage = ({ setPage }: { setPage: (p: Page) => void }) => (
       transition={{ duration: 0.8 }}
       className="section-padding"
     >
-      <GlobeFeatureSection onAction={() => setPage('contact')} />
+      <GlobeFeatureSection onAction={() => navigate('/contact')} />
     </motion.div>
   </div>
 );
+};
 
-const ServicesPage = ({ setPage }: { setPage: (page: string) => void }) => (
+const ServicesPage = () => (
   <div className="pb-32">
     <section className="bg-brand-navy pt-48 pb-32 relative overflow-hidden">
       <div className="absolute inset-0 opacity-10 dot-pattern" />
@@ -574,7 +563,7 @@ const ServicesPage = ({ setPage }: { setPage: (page: string) => void }) => (
   </div>
 );
 
-const HowItWorksPage = ({ setPage }: { setPage: (page: string) => void }) => (
+const HowItWorksPage = () => (
   <div className="pb-32">
     <section className="bg-brand-navy pt-48 pb-32 relative overflow-hidden">
       <div className="absolute inset-0 opacity-10 dot-pattern" />
@@ -645,7 +634,7 @@ const HowItWorksPage = ({ setPage }: { setPage: (page: string) => void }) => (
   </div>
 );
 
-const AboutPage = ({ setPage }: { setPage: (page: string) => void }) => (
+const AboutPage = () => (
   <div className="pb-32">
     <section className="bg-brand-navy pt-48 pb-32 relative overflow-hidden">
       <div className="absolute inset-0 opacity-10 dot-pattern" />
@@ -751,7 +740,7 @@ const AboutPage = ({ setPage }: { setPage: (page: string) => void }) => (
   </div>
 );
 
-const FAQPage = ({ setPage }: { setPage: (page: string) => void }) => (
+const FAQPage = () => (
   <div className="pb-32">
     <section className="bg-brand-navy pt-48 pb-32 relative overflow-hidden">
       <div className="absolute inset-0 opacity-10 dot-pattern" />
@@ -803,19 +792,45 @@ const FAQPage = ({ setPage }: { setPage: (page: string) => void }) => (
           <p className="text-white/70 mb-10 max-w-xl mx-auto">
             Our team is ready to help you navigate your sourcing journey. Reach out to us for a personalized consultation.
           </p>
-          <button onClick={() => setPage('contact')} className="btn-accent cursor-pointer">Contact Support</button>
+          <Link to="/contact" className="btn-accent cursor-pointer">Contact Support</Link>
         </div>
       </div>
     </section>
   </div>
 );
 
-const ContactPage = ({ setPage }: { setPage: (page: string) => void }) => {
+const ContactPage = () => {
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
+    setIsSubmitting(true);
+    
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        setSubmitted(true);
+      } else {
+        console.error("Submission failed");
+        alert("There was an error sending your inquiry. Please try again later.");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("There was an error sending your inquiry. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -922,23 +937,23 @@ const ContactPage = ({ setPage }: { setPage: (page: string) => void }) => {
                 <div className="grid md:grid-cols-2 gap-12">
                   <div className="space-y-4">
                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-navy">Full Name</label>
-                    <input required type="text" className="w-full bg-brand-offwhite px-8 py-5 border-b-2 border-transparent focus:border-brand-gold outline-none transition-all font-bold text-brand-navy placeholder:text-brand-gray/40" placeholder="e.g. Alexander Pierce" />
+                    <input required name="name" type="text" className="w-full bg-brand-offwhite px-8 py-5 border-b-2 border-transparent focus:border-brand-gold outline-none transition-all font-bold text-brand-navy placeholder:text-brand-gray/40" placeholder="e.g. Alexander Pierce" />
                   </div>
                   <div className="space-y-4">
                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-navy">Email Address</label>
-                    <input required type="email" className="w-full bg-brand-offwhite px-8 py-5 border-b-2 border-transparent focus:border-brand-gold outline-none transition-all font-bold text-brand-navy placeholder:text-brand-gray/40" placeholder="e.g. alex@company.com" />
+                    <input required name="email" type="email" className="w-full bg-brand-offwhite px-8 py-5 border-b-2 border-transparent focus:border-brand-gold outline-none transition-all font-bold text-brand-navy placeholder:text-brand-gray/40" placeholder="e.g. alex@company.com" />
                   </div>
                 </div>
                 
                 <div className="grid md:grid-cols-2 gap-12">
                   <div className="space-y-4">
                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-navy">Phone Number</label>
-                    <input type="tel" className="w-full bg-brand-offwhite px-8 py-5 border-b-2 border-transparent focus:border-brand-gold outline-none transition-all font-bold text-brand-navy placeholder:text-brand-gray/40" placeholder="+1 (555) 000-0000" />
+                    <input name="phone" type="tel" className="w-full bg-brand-offwhite px-8 py-5 border-b-2 border-transparent focus:border-brand-gold outline-none transition-all font-bold text-brand-navy placeholder:text-brand-gray/40" placeholder="+1 (555) 000-0000" />
                   </div>
                   <div className="space-y-4">
                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-navy">Monthly Revenue</label>
                     <div className="relative">
-                      <select className="w-full bg-brand-offwhite px-8 py-5 border-b-2 border-transparent focus:border-brand-gold outline-none transition-all font-bold text-brand-navy appearance-none cursor-pointer">
+                      <select name="revenue" className="w-full bg-brand-offwhite px-8 py-5 border-b-2 border-transparent focus:border-brand-gold outline-none transition-all font-bold text-brand-navy appearance-none cursor-pointer">
                         <option>$0 - $5,000</option>
                         <option>$5,000 - $20,000</option>
                         <option>$20,000 - $50,000</option>
@@ -953,11 +968,20 @@ const ContactPage = ({ setPage }: { setPage: (page: string) => void }) => {
                 
                 <div className="space-y-4">
                   <label className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-navy">Your Business Goals</label>
-                  <textarea required rows={5} className="w-full bg-brand-offwhite px-8 py-5 border-b-2 border-transparent focus:border-brand-gold outline-none transition-all font-bold text-brand-navy placeholder:text-brand-gray/40 resize-none" placeholder="Briefly describe your current operations and what you're looking to achieve..."></textarea>
+                  <textarea required name="goals" rows={5} className="w-full bg-brand-offwhite px-8 py-5 border-b-2 border-transparent focus:border-brand-gold outline-none transition-all font-bold text-brand-navy placeholder:text-brand-gray/40 resize-none" placeholder="Briefly describe your current operations and what you're looking to achieve..."></textarea>
                 </div>
                 
-                <button type="submit" className="btn-primary w-full md:w-auto px-16 py-6 text-sm cursor-pointer shadow-xl hover:shadow-brand-gold/20">
-                  Submit Inquiry
+                <button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className={`btn-primary w-full md:w-auto px-16 py-6 text-sm cursor-pointer shadow-xl hover:shadow-brand-gold/20 flex items-center justify-center gap-3 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Processing...
+                    </>
+                  ) : 'Submit Inquiry'}
                 </button>
               </form>
             )}
@@ -968,71 +992,76 @@ const ContactPage = ({ setPage }: { setPage: (page: string) => void }) => {
   );
 };
 
-const BlogPage: React.FC<{ onPostClick: (slug: string) => void }> = ({ onPostClick }) => (
-  <div className="pb-32">
-    <section className="bg-brand-navy pt-48 pb-32 relative overflow-hidden">
-      <div className="absolute inset-0 opacity-10 dot-pattern" />
-      <div className="section-padding relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <SectionHeading 
-            title="Industry Insights" 
-            subtitle="Expert strategies and updates to keep you ahead in the Amazon FBA marketplace."
-            light
-          />
-        </motion.div>
-      </div>
-    </section>
-
-    <section className="section-padding -mt-20 relative z-20">
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
-        {blogPosts.map((post, idx) => (
-            <motion.div 
-            key={post.slug} 
+const BlogPage: React.FC = () => {
+  const navigate = useNavigate();
+  return (
+    <div className="pb-32">
+      <section className="bg-brand-navy pt-48 pb-32 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10 dot-pattern" />
+        <div className="section-padding relative z-10">
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: idx * 0.1 }}
-            whileHover={{ y: -12 }}
-            onClick={() => onPostClick(post.slug)}
-            className="bg-white group cursor-pointer shadow-soft hover:shadow-strong transition-all duration-500 border border-gray-100 rounded-3xl flex flex-col h-full overflow-hidden"
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
           >
-            <div className="overflow-hidden aspect-[16/10] relative">
-              <img src={post.img} alt={post.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" referrerPolicy="no-referrer" />
-              <div className="absolute top-4 left-4 bg-brand-gold text-white text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1">
-                {post.category}
-              </div>
-            </div>
-            <div className="p-10 flex flex-col flex-grow">
-              <div className="text-[10px] font-bold text-brand-gray uppercase tracking-widest mb-4">{post.date}</div>
-              <h3 className="text-2xl font-bold text-brand-navy mb-6 group-hover:text-brand-gold transition-colors uppercase tracking-wider leading-tight break-words">
-                {post.title}
-              </h3>
-              <p className="text-brand-gray text-sm leading-relaxed mb-8 line-clamp-3">
-                {post.excerpt}
-              </p>
-              <div className="mt-auto flex items-center gap-2 text-brand-navy font-bold text-xs uppercase tracking-widest group-hover:text-brand-gold transition-colors">
-                Read Full Article <ArrowRight size={14} className="transition-transform group-hover:translate-x-2" />
-              </div>
-            </div>
+            <SectionHeading 
+              title="Industry Insights" 
+              subtitle="Expert strategies and updates to keep you ahead in the Amazon FBA marketplace."
+              light
+            />
           </motion.div>
-        ))}
-      </div>
-    </section>
-  </div>
-);
+        </div>
+      </section>
 
-const BlogPostPage: React.FC<{ slug: string | null, setPage: (page: Page) => void, onPostClick: (slug: string) => void }> = ({ slug, setPage, onPostClick }) => {
+      <section className="section-padding -mt-20 relative z-20">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+          {blogPosts.map((post, idx) => (
+              <motion.div 
+              key={post.slug} 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.1 }}
+              whileHover={{ y: -12 }}
+              onClick={() => navigate(`/blog/${post.slug}`)}
+              className="bg-white group cursor-pointer shadow-soft hover:shadow-strong transition-all duration-500 border border-gray-100 rounded-3xl flex flex-col h-full overflow-hidden"
+            >
+              <div className="overflow-hidden aspect-[16/10] relative">
+                <img src={post.img} alt={post.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" referrerPolicy="no-referrer" />
+                <div className="absolute top-4 left-4 bg-brand-gold text-white text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1">
+                  {post.category}
+                </div>
+              </div>
+              <div className="p-10 flex flex-col flex-grow">
+                <div className="text-[10px] font-bold text-brand-gray uppercase tracking-widest mb-4">{post.date}</div>
+                <h3 className="text-2xl font-bold text-brand-navy mb-6 group-hover:text-brand-gold transition-colors uppercase tracking-wider leading-tight break-words">
+                  {post.title}
+                </h3>
+                <p className="text-brand-gray text-sm leading-relaxed mb-8 line-clamp-3">
+                  {post.excerpt}
+                </p>
+                <div className="mt-auto flex items-center gap-2 text-brand-navy font-bold text-xs uppercase tracking-widest group-hover:text-brand-gold transition-colors">
+                  Read Full Article <ArrowRight size={14} className="transition-transform group-hover:translate-x-2" />
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+};
+
+const BlogPostPage: React.FC = () => {
+  const navigate = useNavigate();
+  const { slug } = useParams<{ slug: string }>();
   const post = blogPosts.find(p => p.slug === slug);
 
   if (!post) {
     return (
       <div className="pt-48 pb-32 text-center">
         <h2 className="text-3xl font-bold text-brand-navy mb-8">Article Not Found</h2>
-        <button onClick={() => setPage('blog')} className="btn-primary">Back to Blog</button>
+        <Link to="/blog" className="btn-primary">Back to Blog</Link>
       </div>
     );
   }
@@ -1087,12 +1116,12 @@ const BlogPostPage: React.FC<{ slug: string | null, setPage: (page: Page) => voi
               />
               
               <div className="mt-20 pt-10 border-t border-gray-100 flex justify-between items-center">
-                <button 
-                  onClick={() => setPage('blog')}
+                <Link 
+                  to="/blog"
                   className="flex items-center gap-2 text-brand-navy font-bold uppercase tracking-widest text-sm hover:text-brand-gold transition-colors"
                 >
                   <ArrowRight size={16} className="rotate-180" /> Back to Insights
-                </button>
+                </Link>
                 <div className="flex gap-4">
                   <span className="text-xs font-bold uppercase tracking-widest text-brand-gray">Share:</span>
                   {/* Social icons could go here */}
@@ -1107,7 +1136,7 @@ const BlogPostPage: React.FC<{ slug: string | null, setPage: (page: Page) => voi
               <div className="relative z-10">
                 <h3 className="text-2xl font-bold mb-6 uppercase tracking-wider">Ready to Scale?</h3>
                 <p className="text-white/70 mb-8 leading-relaxed">Let our experts handle your sourcing while you focus on growing your brand.</p>
-                <button onClick={() => setPage('contact')} className="btn-primary w-full">Get Started Now</button>
+                <Link to="/contact" className="btn-primary w-full inline-block text-center">Get Started Now</Link>
               </div>
             </div>
 
@@ -1117,7 +1146,7 @@ const BlogPostPage: React.FC<{ slug: string | null, setPage: (page: Page) => voi
                 {blogPosts.filter(p => p.slug !== post.slug).slice(0, 3).map((recent) => (
                   <button 
                     key={recent.slug}
-                    onClick={() => onPostClick(recent.slug)}
+                    onClick={() => navigate(`/blog/${recent.slug}`)}
                     className="group text-left block"
                   >
                     <div className="text-[10px] font-bold text-brand-gold uppercase tracking-widest mb-2">{recent.date}</div>
@@ -1135,7 +1164,7 @@ const BlogPostPage: React.FC<{ slug: string | null, setPage: (page: Page) => voi
   );
 };
 
-const LegalPage = ({ setPage }: { setPage: (page: string) => void }) => (
+const LegalPage = () => (
   <div className="pb-32">
     <section className="bg-brand-navy pt-48 pb-32 relative overflow-hidden">
       <div className="absolute inset-0 opacity-10 dot-pattern" />
@@ -1212,57 +1241,55 @@ const LegalPage = ({ setPage }: { setPage: (page: string) => void }) => (
 // --- Main App ---
 
 export default function App() {
-  const [page, setPage] = useState<Page>('home');
-  const [selectedPostSlug, setSelectedPostSlug] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
     setIsMenuOpen(false);
-  }, [page, selectedPostSlug]);
+  }, [location.pathname]);
 
   const handlePostClick = (slug: string) => {
-    setSelectedPostSlug(slug);
-    setPage('blog-post');
+    navigate(`/blog/${slug}`);
   };
 
-  const navLinks: { label: string, value: Page }[] = [
-    { label: 'Home', value: 'home' },
-    { label: 'Services', value: 'services' },
-    { label: 'How It Works', value: 'how-it-works' },
-    { label: 'About', value: 'about' },
-    { label: 'FAQ', value: 'faq' },
-    { label: 'Blog', value: 'blog' },
-    { label: 'Contact', value: 'contact' }
+  const navLinks: { label: string, value: Page, path: string }[] = [
+    { label: 'Home', value: 'home', path: '/' },
+    { label: 'Services', value: 'services', path: '/services' },
+    { label: 'How It Works', value: 'how-it-works', path: '/how-it-works' },
+    { label: 'About', value: 'about', path: '/about' },
+    { label: 'FAQ', value: 'faq', path: '/faq' },
+    { label: 'Blog', value: 'blog', path: '/blog' },
+    { label: 'Contact', value: 'contact', path: '/contact' }
   ];
 
   return (
     <div className="min-h-screen flex flex-col selection:bg-brand-gold/30">
       {/* Header */}
-      <TopBar />
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 py-1">
         <nav className="max-w-7xl mx-auto px-6 h-14 flex justify-between items-center">
-          <button onClick={() => setPage('home')} className="hover:opacity-80 transition-opacity cursor-pointer">
+          <Link to="/" className="hover:opacity-80 transition-opacity cursor-pointer">
             <Logo variant="transparent" />
-          </button>
+          </Link>
 
           {/* Desktop Nav */}
           <div className="hidden lg:flex items-center gap-10">
             {navLinks.map((link) => (
-              <button 
+              <Link 
                 key={link.value}
-                onClick={() => setPage(link.value)}
+                to={link.path}
                 className={cn(
                   "nav-link cursor-pointer",
-                  page === link.value ? 'text-brand-gold after:w-full' : 'text-brand-navy'
+                  location.pathname === link.path ? 'text-brand-gold after:w-full' : 'text-brand-navy'
                 )}
               >
                 {link.label}
-              </button>
+              </Link>
             ))}
-            <button onClick={() => setPage('contact')} className="btn-primary py-3 px-8 text-xs cursor-pointer shadow-lg hover:shadow-brand-gold/20">
+            <Link to="/contact" className="btn-primary py-3 px-8 text-xs cursor-pointer shadow-lg hover:shadow-brand-gold/20">
               Get Started
-            </button>
+            </Link>
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -1282,20 +1309,20 @@ export default function App() {
             >
               <div className="flex flex-col p-6 gap-4">
                 {navLinks.map((link) => (
-                  <button 
+                  <Link 
                     key={link.value}
-                    onClick={() => setPage(link.value)}
+                    to={link.path}
                     className={cn(
                       "text-left text-lg font-semibold cursor-pointer",
-                      page === link.value ? 'text-brand-gold' : 'text-brand-navy'
+                      location.pathname === link.path ? 'text-brand-gold' : 'text-brand-navy'
                     )}
                   >
                     {link.label}
-                  </button>
+                  </Link>
                 ))}
-                <button onClick={() => setPage('contact')} className="btn-primary w-full mt-4 cursor-pointer">
+                <Link to="/contact" className="btn-primary w-full mt-4 cursor-pointer">
                   Get Started
-                </button>
+                </Link>
               </div>
             </motion.div>
           )}
@@ -1306,21 +1333,24 @@ export default function App() {
       <main className="flex-grow">
         <AnimatePresence mode="wait">
           <motion.div
-            key={page}
+            key={location.pathname}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
           >
-            {page === 'home' && <HomePage setPage={setPage} />}
-            {page === 'services' && <ServicesPage setPage={setPage} />}
-            {page === 'how-it-works' && <HowItWorksPage setPage={setPage} />}
-            {page === 'about' && <AboutPage setPage={setPage} />}
-            {page === 'faq' && <FAQPage setPage={setPage} />}
-            {page === 'contact' && <ContactPage setPage={setPage} />}
-            {page === 'blog' && <BlogPage onPostClick={handlePostClick} />}
-            {page === 'blog-post' && <BlogPostPage slug={selectedPostSlug} setPage={setPage} onPostClick={handlePostClick} />}
-            {page === 'legal' && <LegalPage setPage={setPage} />}
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/services" element={<ServicesPage />} />
+              <Route path="/how-it-works" element={<HowItWorksPage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/faq" element={<FAQPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/blog" element={<BlogPage onPostClick={handlePostClick} />} />
+              <Route path="/blog/:slug" element={<BlogPostPage onPostClick={handlePostClick} />} />
+              <Route path="/legal" element={<LegalPage />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
           </motion.div>
         </AnimatePresence>
       </main>
@@ -1342,7 +1372,7 @@ export default function App() {
             <h4 className="font-display font-black text-xs uppercase tracking-[0.3em] mb-10 text-brand-gold">Quick Links</h4>
             <ul className="space-y-4 text-white/60 font-bold uppercase tracking-widest text-[10px]">
               {navLinks.slice(0, 4).map(link => (
-                <li key={link.value}><button onClick={() => setPage(link.value)} className="hover:text-brand-gold transition-colors cursor-pointer">{link.label}</button></li>
+                <li key={link.value}><Link to={link.path} className="hover:text-brand-gold transition-colors cursor-pointer">{link.label}</Link></li>
               ))}
             </ul>
           </div>
@@ -1350,9 +1380,9 @@ export default function App() {
             <h4 className="font-display font-black text-xs uppercase tracking-[0.3em] mb-10 text-brand-gold">Support</h4>
             <ul className="space-y-4 text-white/60 font-bold uppercase tracking-widest text-[10px]">
               {navLinks.slice(4).map(link => (
-                <li key={link.value}><button onClick={() => setPage(link.value)} className="hover:text-brand-gold transition-colors cursor-pointer">{link.label}</button></li>
+                <li key={link.value}><Link to={link.path} className="hover:text-brand-gold transition-colors cursor-pointer">{link.label}</Link></li>
               ))}
-              <li><button onClick={() => setPage('legal')} className="hover:text-brand-gold transition-colors cursor-pointer">Privacy Policy</button></li>
+              <li><Link to="/legal" className="hover:text-brand-gold transition-colors cursor-pointer">Privacy Policy</Link></li>
             </ul>
           </div>
           <div>
@@ -1376,8 +1406,8 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-6 pt-12 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-black uppercase tracking-[0.2em] text-white/30">
           <p>© 2026 Jerikae LLC. All Rights Reserved.</p>
           <div className="flex gap-8">
-            <button onClick={() => setPage('legal')} className="hover:text-brand-gold transition-colors cursor-pointer">Terms of Service</button>
-            <button onClick={() => setPage('legal')} className="hover:text-brand-gold transition-colors cursor-pointer">Privacy Policy</button>
+            <Link to="/legal" className="hover:text-brand-gold transition-colors cursor-pointer">Terms of Service</Link>
+            <Link to="/legal" className="hover:text-brand-gold transition-colors cursor-pointer">Privacy Policy</Link>
           </div>
         </div>
       </footer>
